@@ -13,8 +13,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="This is Recieved Message"
+            android:textColor="@color/white"
             android:padding="10dp"
             android:id="@+id/tvRecievedMessage"
+            android:layout_marginStart="5dp"
             android:textSize="18sp"/>
 
     </RelativeLayout>

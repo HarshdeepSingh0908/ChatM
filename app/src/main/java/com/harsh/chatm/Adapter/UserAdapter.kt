@@ -29,7 +29,7 @@ class UserAdapter(val userList: ArrayList<User>, var onUserClick: OnUserClick,va
         val user = userList[position]
        // holder.bind(user)
         holder.userName.text = user.name
-        holder.userPhoneNumber.text = user.phone
+        holder.userEmail.text = user.email
         Glide.with(context)
             .load(if (userList[position].image != null){userList[position].image}
             else {
@@ -37,7 +37,7 @@ class UserAdapter(val userList: ArrayList<User>, var onUserClick: OnUserClick,va
             }
             )
             .override(140, 140)
-            .into(holder.image);
+            .into(holder.image)
         holder.itemView.setOnClickListener(){
             onUserClick.onClick(user)
         }
@@ -50,8 +50,9 @@ class UserAdapter(val userList: ArrayList<User>, var onUserClick: OnUserClick,va
 
 class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var userName = itemView.findViewById<TextView>(R.id.tvName)
-    var userPhoneNumber = itemView.findViewById<TextView>(R.id.tvPhoneNumber)
+    var userEmail = itemView.findViewById<TextView>(R.id.tvPhoneNumber)
     var image = itemView.findViewById<ImageView>(R.id.userImg)
+
 
 
     }

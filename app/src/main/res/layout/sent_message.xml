@@ -7,14 +7,16 @@
     android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
     android:layout_margin="2dp"
-    android:background="@drawable/message_background"
+    android:background="@drawable/button_background"
     >
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="This is sent Message"
         android:padding="10dp"
+        android:textColor="@color/white"
         android:id="@+id/tvSentMessage"
+        android:layout_marginEnd="5dp"
         android:textSize="18sp"/>
 
 </RelativeLayout>

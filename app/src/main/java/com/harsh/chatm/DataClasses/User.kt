@@ -6,4 +6,5 @@ class User {
     val email: String? = null
     val image : String ?= null
     val uid : String ?= null
+    val language : String ?= null
 }

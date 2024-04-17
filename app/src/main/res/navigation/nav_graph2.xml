@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph2"
+    app:startDestination="@id/recentChatsFragment">
+
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.harsh.chatm.Fragments.UsersFragment"
+        android:label="fragment_users"
+        tools:layout="@layout/fragment_users" >
+        <action
+            android:id="@+id/action_usersFragment_to_messageFragment"
+            app:destination="@id/messageFragment" />
+        <action
+            android:id="@+id/action_usersFragment_to_recentChatsFragment"
+            app:destination="@id/recentChatsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.harsh.chatm.Fragments.MessageFragment"
+        android:label="fragment_message"
+        tools:layout="@layout/fragment_message" >
+        <action
+            android:id="@+id/action_messageFragment_to_usersFragment"
+            app:destination="@id/usersFragment" />
+        <action
+            android:id="@+id/action_messageFragment_to_recentChatsFragment"
+            app:destination="@id/recentChatsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recentChatsFragment"
+        android:name="com.harsh.chatm.Fragments.RecentChatsFragment"
+        android:label="fragment_recent_chats"
+        tools:layout="@layout/fragment_recent_chats" >
+        <action
+            android:id="@+id/action_recentChatsFragment_to_messageFragment"
+            app:destination="@id/messageFragment" />
+        <action
+            android:id="@+id/action_recentChatsFragment_to_usersFragment"
+            app:destination="@id/usersFragment" />
+    </fragment>
+</navigation>

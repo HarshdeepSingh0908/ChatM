@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:name="androidx.navigation.fragment.NavHostFragment"
     app:defaultNavHost="true"
-    app:navGraph="@navigation/nav_graph"
-    android:id="@+id/navcontroller"
-    tools:context=".MainActivity">
+    app:navGraph="@navigation/nav_graph2"
+    android:id="@+id/navcontroller2"
+    tools:context=".ChatActivity">
 
 </androidx.fragment.app.FragmentContainerView>

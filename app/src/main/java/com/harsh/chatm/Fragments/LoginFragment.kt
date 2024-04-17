@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.harsh.chatm.ChatActivity
 import com.harsh.chatm.MainActivity
 import com.harsh.chatm.R
 import com.harsh.chatm.databinding.FragmentLoginBinding
@@ -20,6 +22,9 @@ class LoginFragment : Fragment() {
 lateinit var binding : FragmentLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            hide()
+        }
 
     }
 
@@ -34,19 +39,24 @@ lateinit var binding : FragmentLoginBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         mAuth = FirebaseAuth.getInstance()
         if (mAuth.currentUser != null){
-            findNavController().navigate(R.id.action_loginFragment_to_chatFragment)
+           // findNavController().navigate(R.id.action_loginFragment_to_usersFragment)
+            val intent = Intent(requireContext(),ChatActivity::class.java)
+            startActivity(intent)
         }
         binding.btnLogin.setOnClickListener(){
+            binding.pbProgressBar.visibility = View.VISIBLE
             val email = binding.edtMailLogin.text.toString()
             val pass = binding.edtPasswordLogin.text.toString()
 
-
             if (pass.isNullOrEmpty()) {
                 binding.edtPasswordLogin.setError("Enter Email")
+
             } else if (email.isNullOrEmpty()){
                 binding.edtMailLogin.setError("Enter Password")
+
             }
                 else {
                 logIn(email,pass)
@@ -60,10 +70,14 @@ lateinit var binding : FragmentLoginBinding
         mAuth.signInWithEmailAndPassword(email,pass)
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Signed in Successul", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_loginFragment_to_chatFragment)
+                binding.pbProgressBar.visibility = View.GONE
+              //  findNavController().navigate(R.id.action_loginFragment_to_usersFragment)
+                val intent = Intent(requireContext(),ChatActivity::class.java)
+                startActivity(intent)
             }.addOnFailureListener{
                 Toast.makeText(requireContext(), "${it.message}", Toast.LENGTH_SHORT).show()
             }
+
     }
 
 
