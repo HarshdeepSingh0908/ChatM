@@ -41,13 +41,30 @@
                 android:layout_gravity="center"
                 android:text="1234567890"
                 android:textSize="20dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:id="@+id/ivMenuDots"
+               android:src="@drawable/menudots"/>
         </LinearLayout>
 
-
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/black"
         />
+
 </LinearLayout>

@@ -37,7 +37,6 @@ class MessageFragment : Fragment() {
     var senderRoom: String? = null
     private lateinit var mDbRef: FirebaseDatabase
     var senderUid :String ?= null
-    //var language :String ?= null
     var dbFire = Firebase.firestore
     var otherUserLang: String? = null
     var otherUser = User()

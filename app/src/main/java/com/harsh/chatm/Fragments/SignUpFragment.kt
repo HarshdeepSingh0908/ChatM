@@ -1,5 +1,6 @@
 package com.harsh.chatm.Fragments
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -32,17 +33,20 @@ class SignUpFragment : Fragment() {
     var imageLocation: String? = null
     var langCode: String? = null
     var isImageUploadedtoFirebase = false
-    var token : String ?= null
+    var token: String? = null
     val filename = UUID.randomUUID().toString()
     val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
     var imagesPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
     }
 
     var pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) {
-        binding.ivImage.setImageURI(it)
-        if (it != null){
+
+        if (it != null) {
             uri = it
+            binding.ivImage.setBackgroundColor(Color.TRANSPARENT)
+            binding.ivImage.setImageURI(it)
             binding.pbProgressBar.visibility = View.VISIBLE
+
             ref.putFile(uri!!).addOnSuccessListener {
                 Log.d(
                     "RegisterActivity",
@@ -53,6 +57,7 @@ class SignUpFragment : Fragment() {
                     imageLocation = it.toString()
                     isImageUploadedtoFirebase = true
                     binding.pbProgressBar.visibility = View.GONE
+
 
                 }
             }.addOnFailureListener {
@@ -106,34 +111,38 @@ class SignUpFragment : Fragment() {
                     id: Long
                 ) {
                     val selectedLanguageName = parent.getItemAtPosition(position) as String
-
-                    // Retrieve corresponding language code from arrays.xml
                     val languageCodes = resources.getStringArray(R.array.language_codes)
                     val selectedLanguageCode = languageCodes[position]
                     langCode = selectedLanguageCode
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Another interface callback
+
                 }
             }
         binding.btnSignUp.setOnClickListener() {
+            binding.pbProgressBar.visibility = View.VISIBLE
             val email = binding.edtMailSignUp.text.toString()
             val pass = binding.edtPasswordSignUp.text.toString()
             val name = binding.edtNameSignUp.text.toString()
             val phoneNumber = binding.edtPhoneNumber.text.toString()
 
-            if (email.isNullOrEmpty()) {
-                binding.edtMailSignUp.setError("Enter Email")
-            } else if (name.isNullOrEmpty()) {
+            if (name.isNullOrEmpty()) {
                 binding.edtNameSignUp.setError("Enter Name")
+                binding.pbProgressBar.visibility = View.GONE
+            } else if (email.isNullOrEmpty()) {
+                binding.edtMailSignUp.setError("Enter Email")
+                binding.pbProgressBar.visibility = View.GONE
             } else if (phoneNumber.isNullOrEmpty()) {
                 binding.edtPhoneNumber.setError("Enter Phone Number")
+                binding.pbProgressBar.visibility = View.GONE
             } else if (pass.isNullOrEmpty()) {
                 binding.edtMailSignUp.setError("Enter Email")
+                binding.pbProgressBar.visibility = View.GONE
             } else if (pass.length < 8) {
                 binding.edtPasswordSignUp.setError("Password Length should be greater or equal to 8")
-           }
+                binding.pbProgressBar.visibility = View.GONE
+            }
 //            else if (uri != null) {
 //                binding.pbProgressBar.visibility = View.VISIBLE
 //                ref.putFile(uri!!).addOnSuccessListener {
@@ -155,10 +164,9 @@ class SignUpFragment : Fragment() {
 //                }
 //
 //            }
-            else if (!isImageUploadedtoFirebase){
+            else if (!isImageUploadedtoFirebase) {
                 Toast.makeText(requireContext(), "Image is not uploaded", Toast.LENGTH_SHORT).show()
-            }
-            else{
+            } else {
                 signUp(
                     email,
                     pass,
@@ -179,7 +187,6 @@ class SignUpFragment : Fragment() {
     }
 
 
-
     private fun signUp(
         email: String,
         pass: String,
@@ -187,18 +194,21 @@ class SignUpFragment : Fragment() {
         phoneNumber: String,
         imageURL: String,
         language: String,
-        fbToken : String
+        fbToken: String
     ) {
+        binding.clMain.visibility = View.GONE
         binding.pbProgressBar.visibility = View.VISIBLE
+
 
 
         mAuth.createUserWithEmailAndPassword(email, pass)
             .addOnSuccessListener {
                 FirebaseMessaging.getInstance().token.addOnSuccessListener {
                     token = it
-                    Log.e("Token",token.toString())
-                }.addOnFailureListener{
-                    Toast.makeText(requireContext(), "Token is not Found", Toast.LENGTH_SHORT).show()
+                    Log.e("Token", token.toString())
+                }.addOnFailureListener {
+                    Toast.makeText(requireContext(), "Token is not Found", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
                 Toast.makeText(requireContext(), "User Created Succesfully", Toast.LENGTH_SHORT)
@@ -216,6 +226,7 @@ class SignUpFragment : Fragment() {
                 dbFire.collection("user").document(uid).set(userMap)
                     .addOnSuccessListener {
                         binding.pbProgressBar.visibility = View.GONE
+
                         Toast.makeText(
                             requireContext(),
                             "Data added to firestore",
@@ -228,6 +239,7 @@ class SignUpFragment : Fragment() {
             }.addOnFailureListener {
                 Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
                 binding.pbProgressBar.visibility = View.GONE
+                binding.clMain.visibility = View.VISIBLE
             }
     }
 

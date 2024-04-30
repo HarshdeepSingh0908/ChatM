@@ -48,6 +48,7 @@ lateinit var binding : FragmentLoginBinding
         }
         binding.btnLogin.setOnClickListener(){
             binding.pbProgressBar.visibility = View.VISIBLE
+
             val email = binding.edtMailLogin.text.toString()
             val pass = binding.edtPasswordLogin.text.toString()
 
@@ -71,9 +72,11 @@ lateinit var binding : FragmentLoginBinding
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Signed in Successul", Toast.LENGTH_SHORT).show()
                 binding.pbProgressBar.visibility = View.GONE
+
               //  findNavController().navigate(R.id.action_loginFragment_to_usersFragment)
                 val intent = Intent(requireContext(),ChatActivity::class.java)
                 startActivity(intent)
+                requireActivity().finish()
             }.addOnFailureListener{
                 Toast.makeText(requireContext(), "${it.message}", Toast.LENGTH_SHORT).show()
             }

@@ -15,6 +15,19 @@
         android:id="@+id/pbProgressBar"
         android:elevation="5dp"
         android:visibility="gone"/>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loadingAnim"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_rawRes="@raw/loading_animation"
+        android:visibility="visible"
+        app:lottie_speed="6"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
 <LinearLayout
     android:id="@+id/llMain"
     app:layout_constraintEnd_toEndOf="parent"
