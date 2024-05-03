@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.harsh.chatm.DataClasses.Message
 import com.harsh.chatm.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MessageAdapter(val context: Context, val messageList: ArrayList<Message>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -39,12 +42,14 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>) 
         if (holder.javaClass == SentViewHolder::class.java) {
 
             val viewHolder = holder as SentViewHolder
-
             holder.sentMessage.text = currentMessage.message
+            holder.sentMessageTime.text = formatTimestamp(currentMessage.timeStamp ?: 0)
         } else {
             val viewHolder = holder as RecieveViewHoler
             holder.recieveMessage.text = currentMessage.message
+            holder.recieveMessageTime.text = formatTimestamp(currentMessage.timeStamp ?: 0)
         }
+
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -58,9 +63,18 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>) 
 
     class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val sentMessage = itemView.findViewById<TextView>(R.id.tvSentMessage)
+        val sentMessageTime = itemView.findViewById<TextView>(R.id.tvSentMessageTime)
     }
 
     class RecieveViewHoler(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val recieveMessage = itemView.findViewById<TextView>(R.id.tvRecievedMessage)
+        val recieveMessageTime = itemView.findViewById<TextView>(R.id.tvRecievedMessageTime)
     }
+    fun formatTimestamp(timestamp: Long): String {
+        val seconds = timestamp / 1000
+        val date = Date(seconds * 1000)
+        val dateFormatter = SimpleDateFormat("HH:mm a", Locale.getDefault())
+        return dateFormatter.format(date)
+    }
+
 }

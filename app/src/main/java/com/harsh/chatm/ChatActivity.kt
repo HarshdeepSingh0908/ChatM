@@ -25,15 +25,18 @@ class ChatActivity : AppCompatActivity() {
     var user = User()
     var dbFire = Firebase.firestore
     var firebaseAuth = Firebase.auth
-    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            finishAffinity()
-        }
-    }
+//    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+//        override fun handleOnBackPressed() {
+//            if(navController.currentDestination?.id == R.id.usersFragment){
+//                navController.popBackStack()
+//            }
+//            finishAffinity()
+//        }
+//    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-        onBackPressedDispatcher.addCallback(this,onBackPressedCallback)
+       // onBackPressedDispatcher.addCallback(this,onBackPressedCallback)
         navController = supportFragmentManager.findFragmentById(R.id.navcontroller2)!!.findNavController()
         setupActionBarWithNavController(navController)
         dbFire.collection("user").document(firebaseAuth?.currentUser?.uid?:"")
@@ -72,7 +75,7 @@ class ChatActivity : AppCompatActivity() {
                 {
                     val intent = Intent(this,ProfileActivity::class.java)
                     startActivity(intent)
-                    finish()
+
                 }
 
 

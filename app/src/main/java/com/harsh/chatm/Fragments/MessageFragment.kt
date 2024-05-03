@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -36,7 +37,7 @@ class MessageFragment : Fragment() {
     var recieverRoom: String? = null
     var senderRoom: String? = null
     private lateinit var mDbRef: FirebaseDatabase
-    var senderUid :String ?= null
+    var senderUid: String? = null
     var dbFire = Firebase.firestore
     var otherUserLang: String? = null
     var otherUser = User()
@@ -92,29 +93,16 @@ class MessageFragment : Fragment() {
         binding.rvMessages.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMessages.adapter = messageAdapter
 
-         binding.rvMessages.scrollToPosition(messageAdapter.itemCount - 1)
+        binding.rvMessages.scrollToPosition(messageAdapter.itemCount - 1)
 
         binding.btnSend.setOnClickListener() {
             val message = binding.edtMessage.text.toString()
-            val messageObject = Message(message, senderUid.toString())
+            //  val messageObject = Message(message, senderUid.toString())
             //checking message language before sending
             var langCodeofMessage = identifyLanguage(message)
-            Log.e("OTL",otherUserLang.toString())
-            Log.e("CUL",mainActivity.user.language.toString())
-            Log.e("langCodeofMessage",langCodeofMessage)
-//Testing inside identify language function
-//            if (langCodeofMessage == mainActivity.user.language){
-//                mDbRef.getReference().child("chats").child(senderRoom!!).child("messages").push()
-//                .setValue(messageObject).addOnSuccessListener {
-//                    mDbRef.getReference().child("chats").child(recieverRoom!!).child("messages")
-//                        .push()
-//                        .setValue(messageObject)
-//                }
-//                binding.edtMessage.setText("")
-//            }else{
-//                Toast.makeText(requireContext(), "Language is not same", Toast.LENGTH_SHORT).show()
-//            }
-
+            Log.e("OTL", otherUserLang.toString())
+            Log.e("CUL", mainActivity.user.language.toString())
+            Log.e("langCodeofMessage", langCodeofMessage)
 
         }
 
@@ -127,12 +115,13 @@ class MessageFragment : Fragment() {
         mDbRef.getReference().child("chats").child(senderRoom!!).child("messages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()){
+                    if (snapshot.exists()) {
                         messageList.clear()
-                        if(snapshot.exists())
+                        if (snapshot.exists())
                             for (postsnapshot in snapshot.children) {
-                                if (postsnapshot.exists()){
-                                    val message = postsnapshot.getValue(Message::class.java)?:Message()
+                                if (postsnapshot.exists()) {
+                                    val message =
+                                        postsnapshot.getValue(Message::class.java) ?: Message()
                                     Singleton.translation.downloadModelIfNeeded(Singleton.conditions)
                                         .addOnSuccessListener {
                                             Log.e(TAG, "Data downloaded Successfully")
@@ -141,13 +130,17 @@ class MessageFragment : Fragment() {
                                         .addOnFailureListener { exception ->
                                             val modelManager = RemoteModelManager.getInstance()
                                             val model =
-                                                TranslateRemoteModel.Builder(mainActivity.user.language ?: "en")
+                                                TranslateRemoteModel.Builder(
+                                                    mainActivity.user.language ?: "en"
+                                                )
                                                     .build()
                                             modelManager.deleteDownloadedModel(model)
                                                 .addOnSuccessListener {
                                                     var conditions = DownloadConditions.Builder()
                                                         .build()
-                                                    Singleton.translation.downloadModelIfNeeded(conditions)
+                                                    Singleton.translation.downloadModelIfNeeded(
+                                                        conditions
+                                                    )
                                                         .addOnSuccessListener {
                                                             startTranslation(message)
                                                         }
@@ -158,16 +151,14 @@ class MessageFragment : Fragment() {
                                             Log.e(TAG, "Download Failed,$exception")
 
                                         }
-                                }
-                                else{
+                                } else {
                                     binding.pbProgressBar.visibility = View.GONE
                                 }
 
 
                             }
                         messageAdapter.notifyDataSetChanged()
-                    }
-                    else binding.pbProgressBar.visibility = View.GONE
+                    } else binding.pbProgressBar.visibility = View.GONE
 
                 }
 
@@ -177,13 +168,12 @@ class MessageFragment : Fragment() {
             })
     }
 
-    fun startTranslation(message: Message){
+    fun startTranslation(message: Message) {
         Singleton.translation.translate(message?.message.toString())
             .addOnSuccessListener { translatedText ->
-                Log.e("transkated text",translatedText)
-
+                Log.e("transkated text", translatedText)
                 val translatedMessage =
-                    Message(translatedText, message?.senderId.toString())?: Message()
+                    Message(translatedText, message?.senderId.toString(),message.timeStamp ?: 0) ?: Message()
                 messageList.add(translatedMessage)
                 messageAdapter.notifyDataSetChanged()
                 binding.pbProgressBar.visibility = View.GONE
@@ -192,10 +182,12 @@ class MessageFragment : Fragment() {
                 Log.e("Error", exception.toString())
             }
     }
- //Code to identify language
+
+    //Code to identify language
     private fun identifyLanguage(message: String): String {
         var code: String = ""
-     val messageObject = Message(message, senderUid.toString())
+        val currentTime = System.currentTimeMillis()
+        val messageObject = Message(message, senderUid.toString(), currentTime)
         val languageIdentifier = LanguageIdentification.getClient()
         languageIdentifier.identifyLanguage(message)
             .addOnSuccessListener { languageCode ->
@@ -204,21 +196,27 @@ class MessageFragment : Fragment() {
                 } else {
                     Log.e(TAG, "Language IDENTIFIED: $languageCode")
                     code = languageCode
-                    if (languageCode == mainActivity.user.language){
-                        mDbRef.getReference().child("chats").child(senderRoom!!).child("messages").push()
+                    if (languageCode == mainActivity.user.language) {
+                        mDbRef.getReference().child("chats").child(senderRoom!!).child("messages")
+                            .push()
                             .setValue(messageObject).addOnSuccessListener {
-                                mDbRef.getReference().child("chats").child(recieverRoom!!).child("messages")
+                                mDbRef.getReference().child("chats").child(recieverRoom!!)
+                                    .child("messages")
                                     .push()
                                     .setValue(messageObject)
+                                //Temporaril checking for message timestamp
+                                messageList.add(messageObject)
+                                messageAdapter.notifyDataSetChanged()
                             }
                         binding.edtMessage.setText("")
-                    }else{
-                        Toast.makeText(requireContext(), "Language is not same", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Language is not same", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(requireContext(), "Could not Identify Language", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), "Exception $it", Toast.LENGTH_SHORT)
                     .show()
             }
         return code

@@ -39,7 +39,8 @@
             app:destination="@id/messageFragment" />
         <action
             android:id="@+id/action_recentChatsFragment_to_usersFragment"
-            app:destination="@id/usersFragment" />
+            app:destination="@id/usersFragment"
+            app:popUpTo="@id/recentChatsFragment"/>
         <action
             android:id="@+id/action_recentChatsFragment_self"
             app:destination="@id/recentChatsFragment" />

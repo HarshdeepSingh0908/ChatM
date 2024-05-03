@@ -29,8 +29,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         var singleton = Singleton
         navController = supportFragmentManager.findFragmentById(R.id.navcontroller)!!.findNavController()
-
-        // Set up ActionBar with Navigation
         setupActionBarWithNavController(navController)
 
         Firebase.messaging.subscribeToTopic("Test").addOnCompleteListener {

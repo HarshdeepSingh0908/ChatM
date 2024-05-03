@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_margin="2dp"
-        android:background="@drawable/message_background"
+
         >
         <TextView
             android:layout_width="wrap_content"
@@ -17,7 +17,17 @@
             android:padding="10dp"
             android:id="@+id/tvRecievedMessage"
             android:layout_marginStart="5dp"
+            android:background="@drawable/message_background"
             android:textSize="18sp"/>
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvRecievedMessage"
+            android:text="9:00"
+            android:padding="2dp"
+            android:textColor="@color/black"
+            android:id="@+id/tvRecievedMessageTime"
+            android:layout_marginStart="5dp"
+            android:textSize="15sp"/>
     </RelativeLayout>
 </RelativeLayout>

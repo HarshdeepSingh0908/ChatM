@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.harsh.chatm.Adapter.AddNewUserAdapter
 import com.harsh.chatm.Adapter.UserAdapter
 import com.harsh.chatm.DataClasses.User
 import com.harsh.chatm.Interfaces.OnUserClick
@@ -89,7 +90,7 @@ class UsersFragment : Fragment(),OnUserClick, OnMenuDotClick {
                     }
                     tempUserList.addAll(userList)
 
-                    binding.rvUsers.adapter = UserAdapter(tempUserList,this,requireContext(),this)
+                    binding.rvUsers.adapter = AddNewUserAdapter(tempUserList,this,requireContext(),this)
                     binding.llMain.visibility = View.VISIBLE
                    // binding.pbProgressBar.visibility = View.GONE
                     binding.loadingAnim.visibility = View.GONE
